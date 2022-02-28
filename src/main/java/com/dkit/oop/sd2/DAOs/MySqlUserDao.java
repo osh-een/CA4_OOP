@@ -1,6 +1,6 @@
 package com.dkit.oop.sd2.DAOs;
 
-/** OOP 2021
+/** OOP Feb 2022
  *
  * Data Access Object (DAO) for User table with MySQL-specific code
  * This 'concrete' class implements the 'UserDaoInterface'.
@@ -9,6 +9,9 @@ package com.dkit.oop.sd2.DAOs;
  * so, the code here is specific to a particular database (e.g. MySQL or Oracle etc...)
  * No SQL queries will be used in the Business logic layer of code, thus, it
  * will be independent of the database specifics.
+ *
+ * The Business Logic layer is only permitted to access the database by calling
+ * methods provided in the Data Access Layer - i.e. by callimng the DAO methods.
  *
  */
 
@@ -29,83 +32,84 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
     @Override
     public List<User> findAllUsers() throws DaoException
     {
-        Connection con = null;
+        Connection connection = null;
         PreparedStatement ps = null;
-        ResultSet rs = null;
-        List<User> users = new ArrayList<>();
+        ResultSet resultSet = null;
+        List<User> usersList = new ArrayList<>();
 
         try
         {
             //Get connection object using the methods in the super class (MySqlDao.java)...
-            con = this.getConnection();
+            connection = this.getConnection();
 
             String query = "SELECT * FROM USER";
-            ps = con.prepareStatement(query);
+            ps = connection.prepareStatement(query);
 
             //Using a PreparedStatement to execute SQL...
-            rs = ps.executeQuery();
-            while (rs.next())
+            resultSet = ps.executeQuery();
+            while (resultSet.next())
             {
-                int userId = rs.getInt("USER_ID");
-                String username = rs.getString("USERNAME");
-                String password = rs.getString("PASSWORD");
-                String lastname = rs.getString("LAST_NAME");
-                String firstname = rs.getString("FIRST_NAME");
+                int userId = resultSet.getInt("USER_ID");
+                String username = resultSet.getString("USERNAME");
+                String password = resultSet.getString("PASSWORD");
+                String lastname = resultSet.getString("LAST_NAME");
+                String firstname = resultSet.getString("FIRST_NAME");
                 User u = new User(userId, firstname, lastname, username, password);
-                users.add(u);
+                usersList.add(u);
             }
         } catch (SQLException e)
         {
-            throw new DaoException("findAllUsers() " + e.getMessage());
+            throw new DaoException("findAllUseresultSet() " + e.getMessage());
         } finally
         {
             try
             {
-                if (rs != null)
+                if (resultSet != null)
                 {
-                    rs.close();
+                    resultSet.close();
                 }
                 if (ps != null)
                 {
                     ps.close();
                 }
-                if (con != null)
+                if (connection != null)
                 {
-                    freeConnection(con);
+                    freeConnection(connection);
                 }
             } catch (SQLException e)
             {
                 throw new DaoException("findAllUsers() " + e.getMessage());
             }
         }
-        return users;     // may be empty
+        return usersList;     // may be empty
     }
 
     @Override
-    public User findUserByUsernamePassword(String uname, String pword) throws DaoException
+    public User findUserByUsernamePassword(String user_name, String pass_word) throws DaoException
     {
-        Connection con = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        User u = null;
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        User user = null;
         try
         {
-            con = this.getConnection();
+            connection = this.getConnection();
 
             String query = "SELECT * FROM USER WHERE USERNAME = ? AND PASSWORD = ?";
-            ps = con.prepareStatement(query);
-            ps.setString(1, uname);
-            ps.setString(2, pword);
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, user_name);
+            preparedStatement.setString(2, pass_word);
 
-            rs = ps.executeQuery();
-            if (rs.next())
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
             {
-                int userId = rs.getInt("USER_ID");
-                String username = rs.getString("USERNAME");
-                String password = rs.getString("PASSWORD");
-                String lastname = rs.getString("LAST_NAME");
-                String firstname = rs.getString("FIRST_NAME");
-                u = new User(userId, firstname, lastname, username, password);
+                int userId = resultSet.getInt("USER_ID");
+                String username = resultSet.getString("USERNAME");
+                String password = resultSet.getString("PASSWORD");
+                String lastname = resultSet.getString("LAST_NAME");
+                String firesultSettname = resultSet.getString("FIRST_NAME");
+
+                user = new User(userId, firesultSettname, lastname, username, password);
             }
         } catch (SQLException e)
         {
@@ -114,25 +118,24 @@ public class MySqlUserDao extends MySqlDao implements UserDaoInterface
         {
             try
             {
-                if (rs != null)
+                if (resultSet != null)
                 {
-                    rs.close();
+                    resultSet.close();
                 }
-                if (ps != null)
+                if (preparedStatement != null)
                 {
-                    ps.close();
+                    preparedStatement.close();
                 }
-                if (con != null)
+                if (connection != null)
                 {
-                    freeConnection(con);
+                    freeConnection(connection);
                 }
             } catch (SQLException e)
             {
                 throw new DaoException("findUserByUsernamePassword() " + e.getMessage());
             }
         }
-        return u;     // u may be null
+        return user;     // reference to User object, or null value
     }
-
 }
 
