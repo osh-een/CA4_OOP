@@ -1,7 +1,7 @@
 package com.dkit.oop.sd2.BusinessObjects;
 
 /** OOP Jan 2025
- * This App demonstrates the use of a Data Access Layer
+ * This AppMain demonstrates the use of a Data Access Layer
  * to separate Business logic from Database specific logic.
  * It uses:
  * Data Access Objects (DAOs) to implement the logic required to access a database.
@@ -24,7 +24,7 @@ import com.dkit.oop.sd2.DTOs.User;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import java.util.List;
 
-public class App
+public class AppMain
 {
     public static void main(String[] args)
     {
