@@ -1,11 +1,12 @@
 package com.dkit.oop.sd2.BusinessObjects;
 
 /** OOP Jan 2025
- * This App demonstrates the use of a Data Access Object (DAO)
+ * This App demonstrates the use of a Data Access Layer
  * to separate Business logic from Database specific logic.
- * It uses Data Access Objects (DAOs),
- * Data Transfer Objects (DTOs), and  a DAO Interface to define
- * a contract between Business Objects and DAOs.
+ * It uses:
+ * Data Access Objects (DAOs) to implement the logic required to access a database.
+ * Data Transfer Objects (DTOs), to transfer data between layers, and a
+ * DAO Interface to define a 'contract' between Business Objects and DAOs.
  *
  * "Use a Data Access Object (DAO) to abstract and encapsulate all
  * access to the data source. The DAO manages the connection with
@@ -27,22 +28,24 @@ public class App
 {
     public static void main(String[] args)
     {
-        UserDaoInterface IUserDao = new MySqlUserDao();  //"IUserDao" -> "I" stands for for
+        UserDaoInterface IUserDao = new MySqlUserDao();  //"IUserDao" -> "I" stands for Interface
 
-//        // Notice that the userDao reference is an Interface type.
-//        // This allows for the use of different concrete implementations.
-//        // e.g. we could replace the MySqlUserDao with an OracleUserDao
-//        // (accessing an Oracle Database)
-//        // without changing anything in the Interface.
-//        // If the Interface doesn't change, then none of the
-//        // code in this file that uses the interface needs to change.
-//        // The 'contract' defined by the interface will not be broken.
-//        // This means that this code is 'independent' of the code
-//        // used to access the database. (Reduced coupling).
-//
-//        // The Business Objects require that all User DAOs implement
-//        // the interface called "UserDaoInterface", as the code uses
-//        // only references of the interface type to access the DAO methods.
+        /// Notice that the userDao reference is an Interface type.
+        /// This allows for the use of different concrete implementations.
+        /// e.g. we could replace the MySqlUserDao with an OracleUserDao
+        /// (accessing an Oracle Database)
+        /// without changing anything in the Interface.
+        /// If the Interface doesn't change, then none of the
+        /// code in this file that uses the interface needs to change.
+        /// This code is dependent of teh Interface but not on the implementation
+        /// of the interface.
+        /// The 'contract' defined by the interface will not be broken.
+        /// This means that this code is 'independent' of the code
+        /// used to access the database. (Reduced coupling).
+
+        /// The Business Objects require that all User DAOs implement
+        /// the interface called "UserDaoInterface", as the code uses
+        /// only references of the interface type to access the DAO methods.
 
         try
         {
@@ -56,7 +59,8 @@ public class App
                     System.out.println("User: " + user.toString());
             }
 
-            // test dao - with username and password that we know are present in the database
+            // test dao with a username and password that we know are present in the database
+            // (Use phpMyAdmin to check that the database has a row with this data)
             System.out.println("\nCall: findUserByUsernamePassword()");
             String username = "smithj";
             String password = "password";
@@ -67,17 +71,20 @@ public class App
             else
                 System.out.println("Username with that password not found");
 
-            // test dao - with an invalid username (i.e. not in database)
+            // test dao - with an invalid username (i.e. row not in database)
             username = "madmax";
             password = "thunderdome";
             user = IUserDao.findUserByUsernamePassword(username, password);
             if(user != null)
                 System.out.println("Username: " + username + " was found: " + user);
             else
-                System.out.println("Username: " + username + ", password: " + password +" is not valid.");
+                System.out.println("Username: " + username + ", password: " + password +" : NO match found");
         }
         catch( DaoException e )
         {
+            /// This code is executed when the DAO layer throws an exception.
+            /// We might place some logic here to deal with the issue, but in this case,
+            /// we simply print out the exception error message to the console.
             e.printStackTrace();
         }
     }
