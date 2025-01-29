@@ -37,7 +37,7 @@ public class App
         /// without changing anything in the Interface.
         /// If the Interface doesn't change, then none of the
         /// code in this file that uses the interface needs to change.
-        /// This code is dependent of teh Interface but not on the implementation
+        /// This code is dependent of the Interface but not on the implementation
         /// of the interface.
         /// The 'contract' defined by the interface will not be broken.
         /// This means that this code is 'independent' of the code
@@ -64,6 +64,7 @@ public class App
             System.out.println("\nCall: findUserByUsernamePassword()");
             String username = "smithj";
             String password = "password";
+
             User user = IUserDao.findUserByUsernamePassword(username, password);
 
             if( user != null ) // null returned if userid and password not valid
@@ -74,7 +75,9 @@ public class App
             // test dao - with an invalid username (i.e. row not in database)
             username = "madmax";
             password = "thunderdome";
+
             user = IUserDao.findUserByUsernamePassword(username, password);
+
             if(user != null)
                 System.out.println("Username: " + username + " was found: " + user);
             else
