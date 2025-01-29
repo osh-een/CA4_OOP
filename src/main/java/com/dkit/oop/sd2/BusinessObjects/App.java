@@ -1,6 +1,6 @@
 package com.dkit.oop.sd2.BusinessObjects;
 
-/** OOP Feb 2022
+/** OOP Jan 2025
  * This App demonstrates the use of a Data Access Object (DAO)
  * to separate Business logic from Database specific logic.
  * It uses Data Access Objects (DAOs),
