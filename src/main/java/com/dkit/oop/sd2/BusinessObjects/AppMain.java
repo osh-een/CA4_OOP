@@ -20,15 +20,16 @@ package com.dkit.oop.sd2.BusinessObjects;
 
 import com.dkit.oop.sd2.DAOs.MySqlUserDao;
 import com.dkit.oop.sd2.DAOs.UserDaoInterface;
+import com.dkit.oop.sd2.DAOs.MySqlExpenseDao;
+import com.dkit.oop.sd2.DAOs.ExpenseDaoInterface;
+import com.dkit.oop.sd2.DTOs.Expense;
 import com.dkit.oop.sd2.DTOs.User;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import java.util.List;
 
-public class AppMain
-{
-    public static void main(String[] args)
-    {
-        UserDaoInterface IUserDao = new MySqlUserDao();  //"IUserDao" -> "I" stands for Interface
+public class AppMain {
+    public static void main(String[] args) {
+        ExpenseDaoInterface IExpenseDao = new MySqlExpenseDao(); // "IUserDao" -> "I" stands for Interface
 
         /// Notice that the userDao reference is an Interface type.
         /// This allows for the use of different concrete implementations.
@@ -47,44 +48,49 @@ public class AppMain
         /// the interface called "UserDaoInterface", as the code uses
         /// only references of the interface type to access the DAO methods.
 
-        try
-        {
-            System.out.println("\nCall findAllUsers()");
-            List<User> users = IUserDao.findAllUsers();     // call a method in the DAO
+        try {
+            System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
+            List<Double> Expenses = IExpenseDao.findAllExpensesAndCalcutateSpend(); // call a method in the DAO
 
-            if( users.isEmpty() )
-                System.out.println("There are no Users");
+            if (Expenses.isEmpty())
+                System.out.println("There are no Expenses");
             else {
-                for (User user : users)
-                    System.out.println("User: " + user.toString());
+                for (int i = 0; i < Expenses.size(); i++) {
+                    if (i == Expenses.size() - 1) {
+                        System.out.println("Total Spend: " + Expenses.get(i));
+                    } else {
+                        System.out.println("Expense " + (i + 1) + ": " + Expenses.get(i));
+                    }
+
+                }
             }
 
-            // test dao with a username and password that we know are present in the database
+            // test dao with a username and password that we know are present in the
+            // database
             // (Use phpMyAdmin to check that the database has a row with this data)
-            System.out.println("\nCall: findUserByUsernamePassword()");
-            String username = "smithj";
-            String password = "password";
+            // System.out.println("\nCall: findUserByUsernamePassword()");
+            // String username = "smithj";
+            // String password = "password";
 
-            User user = IUserDao.findUserByUsernamePassword(username, password);
+            // User user = IExpenseDao.findUserByUsernamePassword(username, password);
 
-            if( user != null ) // null returned if userid and password not valid
-                System.out.println("User found: " + user);
-            else
-                System.out.println("Username with that password not found");
+            // if (user != null) // null returned if userid and password not valid
+            // System.out.println("User found: " + user);
+            // else
+            // System.out.println("Username with that password not found");
 
-            // test dao - with an invalid username (i.e. row not in database)
-            username = "madmax";
-            password = "thunderdome";
+            // // test dao - with an invalid username (i.e. row not in database)
+            // username = "madmax";
+            // password = "thunderdome";
 
-            user = IUserDao.findUserByUsernamePassword(username, password);
+            // user = IUserDao.findUserByUsernamePassword(username, password);
 
-            if(user != null)
-                System.out.println("Username: " + username + " was found: " + user);
-            else
-                System.out.println("Username: " + username + ", password: " + password +" : NO match found");
-        }
-        catch( DaoException e )
-        {
+            // if (user != null)
+            // System.out.println("Username: " + username + " was found: " + user);
+            // else
+            // System.out.println("Username: " + username + ", password: " + password + " :
+            // NO match found");
+        } catch (DaoException e) {
             /// This code is executed when the DAO layer throws an exception.
             /// We might place some logic here to deal with the issue, but in this case,
             /// we simply print out the exception error message to the console.
