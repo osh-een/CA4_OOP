@@ -19,14 +19,18 @@ package com.dkit.oop.sd2.BusinessObjects;
  */
 
 import com.dkit.oop.sd2.DAOs.MySqlExpenseDao;
+import com.dkit.oop.sd2.DAOs.MySqlIncomeDao;
 import com.dkit.oop.sd2.DAOs.ExpenseDaoInterface;
+import com.dkit.oop.sd2.DAOs.IncomeDaoInterface;
 import com.dkit.oop.sd2.DTOs.Expense;
+import com.dkit.oop.sd2.DTOs.Income;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import java.util.List;
 
 public class AppMain {
     public static void main(String[] args) {
         ExpenseDaoInterface IExpenseDao = new MySqlExpenseDao(); // "IUserDao" -> "I" stands for Interface
+        IncomeDaoInterface IIncomeDao = new MySqlIncomeDao(); // "IUserDao" -> "I" stands for Interface
 
         /// Notice that the userDao reference is an Interface type.
         /// This allows for the use of different concrete implementations.
@@ -46,44 +50,73 @@ public class AppMain {
         /// only references of the interface type to access the DAO methods.
 
         try {
-            System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
-            List<Expense> ExpensesList = IExpenseDao.findAllExpenses(); // call a method in the DAO
+            // System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
+            // List<Expense> ExpensesList = IExpenseDao.findAllExpenses(); // call a method
+            // in the DAO
 
-            if (ExpensesList.isEmpty())
+            // if (ExpensesList.isEmpty())
+            // System.out.println("There are no Expenses");
+            // else {
+            // for (Expense expense : ExpensesList) {
+            // System.out.println(expense);
+            // }
+            // }
+
+            // System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
+            // List<Double> Expenses = IExpenseDao.findAllExpensesAndCalcutateSpend(); //
+            // call a method in the DAO
+
+            // if (Expenses.isEmpty())
+            // System.out.println("There are no Expenses");
+            // else {
+            // for (int i = 0; i < Expenses.size(); i++) {
+            // if (i == Expenses.size() - 1) {
+            // System.out.println("Total Spend: " + Expenses.get(i));
+            // } else {
+            // System.out.println("Expense " + (i + 1) + ": " + Expenses.get(i));
+            // }
+
+            // }
+            // }
+
+            // System.out.println("\nCall deleteExpense()");
+            // IExpenseDao.deleteExpense(); // call a method in the DAO
+
+            // System.out.println("\nCall addExpense()");
+            // IExpenseDao.addExpense(); // call a method in the DAO
+
+            System.out.println("\nCall findAllExAndCalcutateSpend()");
+            List<Income> IncomesList = IIncomeDao.findAllIncomes(); // call a method in the DAO
+
+            if (IncomesList.isEmpty())
                 System.out.println("There are no Expenses");
             else {
-                for (Expense expense : ExpensesList) {
-                    System.out.println(expense);
+                for (Income income : IncomesList) {
+                    System.out.println(income);
                 }
             }
 
             System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
-            List<Double> Expenses = IExpenseDao.findAllExpensesAndCalcutateSpend(); // call a method in the DAO
+            List<Double> Incomes = IIncomeDao.findAllIncomesAndCalcutateGain(); // call a method in the DAO
 
-            if (Expenses.isEmpty())
-                System.out.println("There are no Expenses");
+            if (Incomes.isEmpty())
+                System.out.println("There are no Incomes");
             else {
-                for (int i = 0; i < Expenses.size(); i++) {
-                    if (i == Expenses.size() - 1) {
-                        System.out.println("Total Spend: " + Expenses.get(i));
+                for (int i = 0; i < Incomes.size(); i++) {
+                    if (i == Incomes.size() - 1) {
+                        System.out.println("Total Spend: " + Incomes.get(i));
                     } else {
-                        System.out.println("Expense " + (i + 1) + ": " + Expenses.get(i));
+                        System.out.println("Expense " + (i + 1) + ": " + Incomes.get(i));
                     }
 
                 }
             }
 
-                        
-            System.out.println("\nCall deleteExpense()");
-            IExpenseDao.deleteExpense(); // call a method in the DAO
+            System.out.println("\nCall deleteIncome()");
+            IIncomeDao.deleteIncome(); // call a method in the DAO
 
-
-            System.out.println("\nCall addExpense()");
-            IExpenseDao.addExpense(); // call a method in the DAO
-
-
-
-
+            System.out.println("\nCall addIncome()");
+            IIncomeDao.addIncome(); // call a method in the DAO
 
             // test dao with a username and password that we know are present in the
             // database
