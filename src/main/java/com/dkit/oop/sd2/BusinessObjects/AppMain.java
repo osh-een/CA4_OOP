@@ -18,12 +18,9 @@ package com.dkit.oop.sd2.BusinessObjects;
  * to create the required MySQL user_database and User table.
  */
 
-import com.dkit.oop.sd2.DAOs.MySqlUserDao;
-import com.dkit.oop.sd2.DAOs.UserDaoInterface;
 import com.dkit.oop.sd2.DAOs.MySqlExpenseDao;
 import com.dkit.oop.sd2.DAOs.ExpenseDaoInterface;
 import com.dkit.oop.sd2.DTOs.Expense;
-import com.dkit.oop.sd2.DTOs.User;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import java.util.List;
 
@@ -50,6 +47,17 @@ public class AppMain {
 
         try {
             System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
+            List<Expense> ExpensesList = IExpenseDao.findAllExpenses(); // call a method in the DAO
+
+            if (ExpensesList.isEmpty())
+                System.out.println("There are no Expenses");
+            else {
+                for (Expense expense : ExpensesList) {
+                    System.out.println(expense);
+                }
+            }
+
+            System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
             List<Double> Expenses = IExpenseDao.findAllExpensesAndCalcutateSpend(); // call a method in the DAO
 
             if (Expenses.isEmpty())
@@ -64,6 +72,18 @@ public class AppMain {
 
                 }
             }
+
+                        
+            System.out.println("\nCall deleteExpense()");
+            IExpenseDao.deleteExpense(); // call a method in the DAO
+
+
+            System.out.println("\nCall addExpense()");
+            IExpenseDao.addExpense(); // call a method in the DAO
+
+
+
+
 
             // test dao with a username and password that we know are present in the
             // database

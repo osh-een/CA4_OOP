@@ -25,11 +25,14 @@ import java.util.List;
 
 public interface ExpenseDaoInterface
 {
+
+    public List<Expense> findAllExpenses() throws DaoException;
+
     public List<Double> findAllExpensesAndCalcutateSpend() throws DaoException;
 
-    public void addExpense(Expense expense) throws DaoException;
+    public void addExpense() throws DaoException;
 
-    public void deleteExpense(int expenseID) throws DaoException;
+    public void deleteExpense() throws DaoException;
 
 }
 
