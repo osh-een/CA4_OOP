@@ -19,7 +19,7 @@ package com.dkit.oop.sd2.DAOs;
  * in the DAO layer.
  */
 
-import com.dkit.oop.sd2.DTOs.Expense;
+import com.dkit.oop.sd2.DTOs.Income;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 
 import java.sql.Connection;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
+public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
     /**
      * Will access and return a List of all users in Expense database table
      * 
@@ -42,32 +42,31 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
     static Scanner kb = new Scanner(System.in);
 
     @Override
-    public List<Expense> findAllExpenses() throws DaoException {
+    public List<Income> findAllIncomes() throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        List<Expense> ExpemsesList = new ArrayList<>();
+        List<Income> IncomesList = new ArrayList<>();
 
         try {
             // Get connection object using the getConnection() method inherited
             // from the super class (MySqlDao.java)
             connection = this.getConnection();
 
-            String query = "SELECT * FROM EXPENSE";
+            String query = "SELECT * FROM INCOME";
             preparedStatement = connection.prepareStatement(query);
 
             // Using a PreparedStatement to execute SQL...
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int expenseID = resultSet.getInt("EXPENSE_ID");
+                int incomeID = resultSet.getInt("INCOME_ID");
                 String title = resultSet.getString("TITLE");
-                String category = resultSet.getString("CATEGORY");
                 double amount = resultSet.getDouble("AMOUNT");
-                Date date = resultSet.getDate("DATEINCURRED");
-                ExpemsesList.add(new Expense(expenseID, title, category, amount, date));
+                Date date = resultSet.getDate("DATEEARNED");
+                IncomesList.add(new Income(incomeID, title, amount, date));
             }
         } catch (SQLException e) {
-            throw new DaoException("findAllExpensesesultSet() " + e.getMessage());
+            throw new DaoException("findAllIncomesResultSet() " + e.getMessage());
         } finally {
             try {
                 if (resultSet != null) {
@@ -80,38 +79,38 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                     freeConnection(connection);
                 }
             } catch (SQLException e) {
-                throw new DaoException("findAllExpenses() " + e.getMessage());
+                throw new DaoException("findAllIncomes() " + e.getMessage());
             }
         }
-        return ExpemsesList; // may be empty
+        return IncomesList; // may be empty
     }
 
     @Override
-    public List<Double> findAllExpensesAndCalcutateSpend() throws DaoException {
+    public List<Double> findAllIncomesAndCalcutateGain() throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        List<Double> ExpensesList = new ArrayList<>();
-        double totalSpend = 0;
+        List<Double> IncomesList = new ArrayList<>();
+        double totalGain = 0;
 
         try {
             // Get connection object using the getConnection() method inherited
             // from the super class (MySqlDao.java)
             connection = this.getConnection();
 
-            String query = "SELECT * FROM EXPENSE";
+            String query = "SELECT * FROM INCOME";
             preparedStatement = connection.prepareStatement(query);
 
             // Using a PreparedStatement to execute SQL...
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                totalSpend += resultSet.getDouble("AMOUNT");
-                ExpensesList.add(resultSet.getDouble("AMOUNT"));
+                totalGain += resultSet.getDouble("AMOUNT");
+                IncomesList.add(resultSet.getDouble("AMOUNT"));
             }
-            ExpensesList.add(totalSpend);
+            IncomesList.add(totalGain);
         } catch (SQLException e) {
-            throw new DaoException("findAllExpensesAndCalcutateSpendResultSet() " + e.getMessage());
+            throw new DaoException("findAllIncomesAndCalcutateGainResultSet() " + e.getMessage());
         } finally {
             try {
                 if (resultSet != null) {
@@ -124,14 +123,14 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                     freeConnection(connection);
                 }
             } catch (SQLException e) {
-                throw new DaoException("findAllExpensesAndCalcutateSpend() " + e.getMessage());
+                throw new DaoException("findAllIncomesAndCalcutateGain() " + e.getMessage());
             }
         }
-        return ExpensesList; // may be empty
+        return IncomesList; // may be empty
     }
 
     @Override
-    public void addExpense() throws DaoException {
+    public void addIncome() throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -140,36 +139,32 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
             // from the super class (MySqlDao.java)
             connection = this.getConnection();
 
-            String query = "INSERT INTO Expense (Title, Category, Amount, DateIncurred) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO Income (Title, Amount, DateEarned) VALUES (?, ?, ?)";
             preparedStatement = connection.prepareStatement(query);
 
-            System.out.print("Enter expense Title: ");
+            System.out.print("Enter income Title: ");
             String Title = kb.nextLine();
 
-            System.out.print("Enter expense Category: ");
-            String Category = kb.nextLine();
-
-            System.out.print("Enter expense Amount: ");
+            System.out.print("Enter income Amount: ");
             double Amount = kb.nextDouble();
             kb.nextLine();
 
-            System.out.print("Enter expense Date (YYYY-MM-DD): ");
+            System.out.print("Enter income Date (YYYY-MM-DD): ");
             String date = kb.nextLine();
 
-            Date expenseDate = Date.valueOf(date);
+            Date incomeDate = Date.valueOf(date);
 
             preparedStatement.setString(1, Title);
-            preparedStatement.setString(2, Category);
-            preparedStatement.setDouble(3, Amount);
-            preparedStatement.setDate(4, expenseDate);
+            preparedStatement.setDouble(2, Amount);
+            preparedStatement.setDate(3, incomeDate);
 
             int rowsInserted = preparedStatement.executeUpdate();
 
             if (rowsInserted > 0) {
-                System.out.println("Expense added successfully!");
+                System.out.println("Income added successfully!");
             }
         } catch (SQLException e) {
-            throw new DaoException("addExpenseResultSet() " + e.getMessage());
+            throw new DaoException("addIncomeResultSet() " + e.getMessage());
         } finally {
             try {
                 if (preparedStatement != null) {
@@ -179,13 +174,13 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                     freeConnection(connection);
                 }
             } catch (SQLException e) {
-                throw new DaoException("addExpense() " + e.getMessage());
+                throw new DaoException("addIncome() " + e.getMessage());
             }
         }
     }
 
     @Override
-    public void deleteExpense() throws DaoException {
+    public void deleteIncome() throws DaoException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -194,13 +189,13 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
             // from the super class (MySqlDao.java)
             connection = this.getConnection();
 
-            String query = "DELETE FROM Expense WHERE Expense_ID = ?";
+            String query = "DELETE FROM Income WHERE Income_ID = ?";
             preparedStatement = connection.prepareStatement(query);
 
-            System.out.print("Enter expense ID: ");
-            int expenseID = kb.nextInt();
+            System.out.print("Enter Income ID: ");
+            int IncomeID = kb.nextInt();
 
-            preparedStatement.setInt(1, expenseID);
+            preparedStatement.setInt(1, IncomeID);
 
             int rowsDeleted = preparedStatement.executeUpdate();
 
@@ -209,7 +204,7 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
             }
 
         } catch (SQLException e) {
-            throw new DaoException("deleteExpenseResultSet() " + e.getMessage());
+            throw new DaoException("deleteIncomeResultSet() " + e.getMessage());
         } finally {
             try {
                 if (preparedStatement != null) {
@@ -219,7 +214,7 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                     freeConnection(connection);
                 }
             } catch (SQLException e) {
-                throw new DaoException("deleteExpense() " + e.getMessage());
+                throw new DaoException("deleteIncome() " + e.getMessage());
             }
         }
     }
