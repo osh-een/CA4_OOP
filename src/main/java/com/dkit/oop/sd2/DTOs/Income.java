@@ -1,7 +1,10 @@
 package com.dkit.oop.sd2.DTOs;
 
-/**                                                     OOP Feb 2022
- *  Data Transfer Object (DTO)
+import java.sql.Date;
+
+/**
+ * OOP Feb 2022
+ * Data Transfer Object (DTO)
  *
  * This POJO (Plain Old Java Object) is called the Data Transfer Object (DTO).
  * (or, alternatively, the Model Object or the Value Object).
@@ -18,12 +21,12 @@ public class Income {
     private int incomeID;
     private String title;
     private double amount;
-    private String dateEarned;
+    private Date dateEarned;
 
     public Income() {
     }
 
-    public Income(int incomeID, String title, double amount, String dateEarned) {
+    public Income(int incomeID, String title, double amount, Date dateEarned) {
         this.incomeID = incomeID;
         this.title = title;
         this.amount = amount;
@@ -54,11 +57,11 @@ public class Income {
         this.amount = amount;
     }
 
-    public String getDateEarned() {
+    public Date getDateEarned() {
         return dateEarned;
     }
 
-    public void setDateEarned(String dateEarned) {
+    public void setDateEarned(Date dateEarned) {
         this.dateEarned = dateEarned;
     }
 
