@@ -2,8 +2,9 @@ package com.dkit.oop.sd2.DTOs;
 
 import java.sql.Date;
 
-/**                                                     OOP Feb 2022
- *  Data Transfer Object (DTO)
+/**
+ * OOP Feb 2022
+ * Data Transfer Object (DTO)
  *
  * This POJO (Plain Old Java Object) is called the Data Transfer Object (DTO).
  * (or, alternatively, the Model Object or the Value Object).

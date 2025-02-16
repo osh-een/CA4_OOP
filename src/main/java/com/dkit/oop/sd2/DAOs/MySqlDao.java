@@ -1,4 +1,5 @@
 package com.dkit.oop.sd2.DAOs;
+
 /** MySqlDao -
  * - implements functionality that is common to all MySQL DAOs
  * - i.e. getConection() and freeConnection()
@@ -13,46 +14,34 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 
-public class MySqlDao
-{
-    public Connection getConnection() throws DaoException
-    {
+public class MySqlDao {
+    public Connection getConnection() throws DaoException {
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/incomeexpense_database";
         String username = "root";
         String password = "";
         Connection connection = null;
 
-        try
-        {
+        try {
             Class.forName(driver);
             connection = DriverManager.getConnection(url, username, password);
-        }
-        catch (ClassNotFoundException e)
-        {
+        } catch (ClassNotFoundException e) {
             System.out.println("Failed to find driver class " + e.getMessage());
             System.exit(1);
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             System.out.println("Connection failed " + e.getMessage());
             System.exit(2);
         }
         return connection;
     }
 
-    public void freeConnection(Connection connection) throws DaoException
-    {
-        try
-        {
-            if (connection != null)
-            {
+    public void freeConnection(Connection connection) throws DaoException {
+        try {
+            if (connection != null) {
                 connection.close();
                 connection = null;
             }
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             System.out.println("Failed to free connection: " + e.getMessage());
             System.exit(1);
         }
