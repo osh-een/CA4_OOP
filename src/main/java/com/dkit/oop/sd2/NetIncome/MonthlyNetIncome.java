@@ -1,17 +1,15 @@
-package com.dkit.oop.sd2;
+package com.dkit.oop.sd2.NetIncome;
 
+import com.dkit.oop.sd2.AllValidation.Validation;
 import com.dkit.oop.sd2.DAOs.ExpenseDaoInterface;
 import com.dkit.oop.sd2.DAOs.IncomeDaoInterface;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 
 import java.util.List;
-import java.util.Scanner;
 
 public class MonthlyNetIncome {
     private ExpenseDaoInterface expenseDao;
     private IncomeDaoInterface incomeDao;
-
-    static Scanner kb = new Scanner(System.in);
 
     public MonthlyNetIncome(ExpenseDaoInterface iExpenseDao, IncomeDaoInterface iIncomeDao) {
         this.expenseDao = iExpenseDao;
@@ -19,11 +17,9 @@ public class MonthlyNetIncome {
     }
 
     public double calculateNetIncome() throws DaoException {
-        System.out.println("Enter month: ");
-        int month = kb.nextInt();
+        int month = Validation.validateIntInput("Enter month: ", 1, 12);
 
-        System.out.println("Enter year: ");
-        int year = kb.nextInt();
+        int year = Validation.validateIntInput("Enter year: ", 1, 2025);
 
         double totalIncome = displayAndGetIncomes(incomeDao.findMonthlyIncome(month, year));
         double totalExpense = displayAndGetExpenses(expenseDao.findMonthlyExpense(month, year));
