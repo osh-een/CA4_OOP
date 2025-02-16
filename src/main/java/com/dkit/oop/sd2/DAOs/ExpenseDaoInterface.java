@@ -23,9 +23,7 @@ import com.dkit.oop.sd2.DTOs.Expense;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import java.util.List;
 
-public interface ExpenseDaoInterface
-{
-
+public interface ExpenseDaoInterface {
     public List<Expense> findAllExpenses() throws DaoException;
 
     public List<Double> findAllExpensesAndCalcutateSpend() throws DaoException;
@@ -34,5 +32,5 @@ public interface ExpenseDaoInterface
 
     public void deleteExpense() throws DaoException;
 
+    public List<Double> findMonthlyExpense(int month, int year) throws DaoException;
 }
-

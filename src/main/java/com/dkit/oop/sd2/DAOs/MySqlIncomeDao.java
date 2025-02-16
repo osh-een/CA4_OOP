@@ -218,4 +218,51 @@ public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
             }
         }
     }
+
+    @Override
+    public List<Double> findMonthlyIncome(int month, int year) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Double> IncomesList = new ArrayList<>();
+        double totalGain = 0;
+
+        try {
+            // Get connection object using the getConnection() method inherited
+            // from the super class (MySqlDao.java)
+            connection = this.getConnection();
+
+            String query = "SELECT * FROM INCOME WHERE MONTH(DateEarned) = ? AND YEAR(DateEarned) = ?";
+
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, month);
+            preparedStatement.setInt(2, year);
+
+            // Using a PreparedStatement to execute SQL...
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                totalGain += resultSet.getDouble("AMOUNT");
+                IncomesList.add(resultSet.getDouble("AMOUNT"));
+            }
+            IncomesList.add(totalGain);
+        } catch (SQLException e) {
+            throw new DaoException("findMonthlyIncomeResultSet() " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    freeConnection(connection);
+                }
+            } catch (SQLException e) {
+                throw new DaoException("findMonthlyIncome() " + e.getMessage());
+            }
+        }
+        return IncomesList; // may be empty
+    }
 }

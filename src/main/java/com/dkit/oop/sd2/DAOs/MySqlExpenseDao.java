@@ -46,7 +46,7 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        List<Expense> ExpemsesList = new ArrayList<>();
+        List<Expense> ExpensesList = new ArrayList<>();
 
         try {
             // Get connection object using the getConnection() method inherited
@@ -64,7 +64,7 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                 String category = resultSet.getString("CATEGORY");
                 double amount = resultSet.getDouble("AMOUNT");
                 Date date = resultSet.getDate("DATEINCURRED");
-                ExpemsesList.add(new Expense(expenseID, title, category, amount, date));
+                ExpensesList.add(new Expense(expenseID, title, category, amount, date));
             }
         } catch (SQLException e) {
             throw new DaoException("findAllExpensesesultSet() " + e.getMessage());
@@ -83,7 +83,7 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                 throw new DaoException("findAllExpenses() " + e.getMessage());
             }
         }
-        return ExpemsesList; // may be empty
+        return ExpensesList; // may be empty
     }
 
     @Override
@@ -222,5 +222,52 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
                 throw new DaoException("deleteExpense() " + e.getMessage());
             }
         }
+    }
+
+    @Override
+    public List<Double> findMonthlyExpense(int month, int year) throws DaoException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        List<Double> ExpensesList = new ArrayList<>();
+        double totalSpend = 0;
+
+        try {
+            // Get connection object using the getConnection() method inherited
+            // from the super class (MySqlDao.java)
+            connection = this.getConnection();
+
+            String query = "SELECT * FROM EXPENSE WHERE MONTH(dateIncurred) = ? AND YEAR(dateIncurred) = ?";
+
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setInt(1, month);
+            preparedStatement.setInt(2, year);
+
+            // Using a PreparedStatement to execute SQL...
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                totalSpend += resultSet.getDouble("AMOUNT");
+                ExpensesList.add(resultSet.getDouble("AMOUNT"));
+            }
+            ExpensesList.add(totalSpend);
+        } catch (SQLException e) {
+            throw new DaoException("findMonthlyExpenseResultSet() " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    freeConnection(connection);
+                }
+            } catch (SQLException e) {
+                throw new DaoException("findMonthlyExpense() " + e.getMessage());
+            }
+        }
+        return ExpensesList; // may be empty
     }
 }

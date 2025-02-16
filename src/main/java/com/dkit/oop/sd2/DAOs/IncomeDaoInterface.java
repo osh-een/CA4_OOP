@@ -23,8 +23,7 @@ import com.dkit.oop.sd2.DTOs.Income;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import java.util.List;
 
-public interface IncomeDaoInterface
-{
+public interface IncomeDaoInterface {
     public List<Income> findAllIncomes() throws DaoException;
 
     public List<Double> findAllIncomesAndCalcutateGain() throws DaoException;
@@ -33,5 +32,5 @@ public interface IncomeDaoInterface
 
     public void deleteIncome() throws DaoException;
 
+    public List<Double> findMonthlyIncome(int month, int year) throws DaoException;
 }
-
