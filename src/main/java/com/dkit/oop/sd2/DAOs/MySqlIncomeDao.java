@@ -21,6 +21,10 @@ import com.dkit.oop.sd2.AllValidation.Validation;
  * in the DAO layer.
  */
 
+//  REFERENCES:
+//  https://neon.tech/postgresql/postgresql-jdbc/delete
+//  https://www.tutorialspoint.com/jdbc/jdbc-insert-records.htm#:~:text=Once%20connection%20is%20prepared%2C%20we,executeUpdate()%20method.
+
 import com.dkit.oop.sd2.DTOs.Income;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 
