@@ -1,5 +1,7 @@
 package com.dkit.oop.sd2.DAOs;
 
+import com.dkit.oop.sd2.AllValidation.Validation;
+
 /**
  * OOP Feb 2024
  * <p>
@@ -29,7 +31,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+import static com.dkit.oop.sd2.BusinessObjects.AppMain.kb;
 
 public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
     /**
@@ -38,8 +41,6 @@ public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
      * @return List of Expense objects
      * @throws DaoException
      */
-
-    static Scanner kb = new Scanner(System.in);
 
     @Override
     public List<Income> findAllIncomes() throws DaoException {
@@ -145,23 +146,20 @@ public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
             System.out.print("Enter income Title: ");
             String Title = kb.nextLine();
 
-            System.out.print("Enter income Amount: ");
-            double Amount = kb.nextDouble();
-            kb.nextLine();
+            double Amount = Validation.validateDoubleInput("Enter income Amount: ", 0);
 
-            System.out.print("Enter income Date (YYYY-MM-DD): ");
-            String date = kb.nextLine();
-
-            Date incomeDate = Date.valueOf(date);
+            Date date = Validation.validateDateInput("Enter expense Date (YYYY-MM-DD): ");
 
             preparedStatement.setString(1, Title);
             preparedStatement.setDouble(2, Amount);
-            preparedStatement.setDate(3, incomeDate);
+            preparedStatement.setDate(3, date);
 
             int rowsInserted = preparedStatement.executeUpdate();
 
             if (rowsInserted > 0) {
                 System.out.println("Income added successfully!");
+            } else {
+                System.out.println("Income not added!");
             }
         } catch (SQLException e) {
             throw new DaoException("addIncomeResultSet() " + e.getMessage());
@@ -192,8 +190,7 @@ public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
             String query = "DELETE FROM Income WHERE Income_ID = ?";
             preparedStatement = connection.prepareStatement(query);
 
-            System.out.print("Enter Income ID: ");
-            int IncomeID = kb.nextInt();
+            int IncomeID = Validation.validateIntInput("Enter Income ID: ", 0);
 
             preparedStatement.setInt(1, IncomeID);
 
@@ -201,6 +198,8 @@ public class MySqlIncomeDao extends MySqlDao implements IncomeDaoInterface {
 
             if (rowsDeleted > 0) {
                 System.out.println("Expense deleted successfully!");
+            } else {
+                System.out.println("Expense not found!");
             }
 
         } catch (SQLException e) {

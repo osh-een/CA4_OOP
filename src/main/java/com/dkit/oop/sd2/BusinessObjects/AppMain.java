@@ -25,11 +25,16 @@ import com.dkit.oop.sd2.DAOs.IncomeDaoInterface;
 import com.dkit.oop.sd2.DTOs.Expense;
 import com.dkit.oop.sd2.DTOs.Income;
 import com.dkit.oop.sd2.Exceptions.DaoException;
-import com.dkit.oop.sd2.MonthlyNetIncome;
+import com.dkit.oop.sd2.NetIncome.MonthlyNetIncome;
+import com.dkit.oop.sd2.AllValidation.Validation;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class AppMain {
+
+    public static Scanner kb = new Scanner(System.in);
+
     public static void main(String[] args) {
         ExpenseDaoInterface IExpenseDao = new MySqlExpenseDao(); // "IUserDao" -> "I" stands for Interface
         IncomeDaoInterface IIncomeDao = new MySqlIncomeDao(); // "IUserDao" -> "I" stands for Interface
@@ -39,8 +44,6 @@ public class AppMain {
 
         String[] choices = { "1. Add Expense", "2. Add Income", "3. Delete Expense", "4. Delete Income",
                 "5. View All Expenses", "6. View All Incomes", "7. Calculate Net Income", "0. Exit" };
-
-        Scanner kb = new Scanner(System.in);
 
         /// Notice that the userDao reference is an Interface type.
         /// This allows for the use of different concrete implementations.
@@ -61,10 +64,7 @@ public class AppMain {
 
         try {
             do {
-                for (String choice : choices) {
-                    System.out.println(choice);
-                }
-                input = kb.nextInt();
+                input = Validation.validateIntInput(choices, 0, 7);
 
                 switch (input) {
                     case 1:
@@ -101,6 +101,7 @@ public class AppMain {
                 }
             } while (input != 0);
 
+            kb.close();
         } catch (DaoException e) {
             /// This code is executed when the DAO layer throws an exception.
             /// We might place some logic here to deal with the issue, but in this case,

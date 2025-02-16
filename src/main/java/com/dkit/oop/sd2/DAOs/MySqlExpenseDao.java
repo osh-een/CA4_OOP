@@ -1,5 +1,7 @@
 package com.dkit.oop.sd2.DAOs;
 
+import com.dkit.oop.sd2.AllValidation.Validation;
+
 /**
  * OOP Feb 2024
  * <p>
@@ -29,7 +31,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+
+import static com.dkit.oop.sd2.BusinessObjects.AppMain.kb;
 
 public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
     /**
@@ -38,8 +41,6 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
      * @return List of Expense objects
      * @throws DaoException
      */
-
-    static Scanner kb = new Scanner(System.in);
 
     @Override
     public List<Expense> findAllExpenses() throws DaoException {
@@ -149,24 +150,21 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
             System.out.print("Enter expense Category: ");
             String Category = kb.nextLine();
 
-            System.out.print("Enter expense Amount: ");
-            double Amount = kb.nextDouble();
-            kb.nextLine();
+            double Amount = Validation.validateDoubleInput("Enter expense Amount: ", 0);
 
-            System.out.print("Enter expense Date (YYYY-MM-DD): ");
-            String date = kb.nextLine();
-
-            Date expenseDate = Date.valueOf(date);
+            Date date = Validation.validateDateInput("Enter expense Date (YYYY-MM-DD): ");
 
             preparedStatement.setString(1, Title);
             preparedStatement.setString(2, Category);
             preparedStatement.setDouble(3, Amount);
-            preparedStatement.setDate(4, expenseDate);
+            preparedStatement.setDate(4, date);
 
             int rowsInserted = preparedStatement.executeUpdate();
 
             if (rowsInserted > 0) {
                 System.out.println("Expense added successfully!");
+            } else {
+                System.out.println("Expense not added!");
             }
         } catch (SQLException e) {
             throw new DaoException("addExpenseResultSet() " + e.getMessage());
@@ -197,8 +195,7 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
             String query = "DELETE FROM Expense WHERE Expense_ID = ?";
             preparedStatement = connection.prepareStatement(query);
 
-            System.out.print("Enter expense ID: ");
-            int expenseID = kb.nextInt();
+            int expenseID = Validation.validateIntInput("Enter expense ID: ", 0);
 
             preparedStatement.setInt(1, expenseID);
 
@@ -206,6 +203,8 @@ public class MySqlExpenseDao extends MySqlDao implements ExpenseDaoInterface {
 
             if (rowsDeleted > 0) {
                 System.out.println("Expense deleted successfully!");
+            } else {
+                System.out.println("Expense not found!");
             }
 
         } catch (SQLException e) {
