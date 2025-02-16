@@ -27,11 +27,20 @@ import com.dkit.oop.sd2.DTOs.Income;
 import com.dkit.oop.sd2.Exceptions.DaoException;
 import com.dkit.oop.sd2.MonthlyNetIncome;
 import java.util.List;
+import java.util.Scanner;
 
 public class AppMain {
     public static void main(String[] args) {
         ExpenseDaoInterface IExpenseDao = new MySqlExpenseDao(); // "IUserDao" -> "I" stands for Interface
         IncomeDaoInterface IIncomeDao = new MySqlIncomeDao(); // "IUserDao" -> "I" stands for Interface
+        int input = 0;
+        List<Expense> ExpensesList = null;
+        List<Income> IncomesList = null;
+
+        String[] choices = { "1. Add Expense", "2. Add Income", "3. Delete Expense", "4. Delete Income",
+                "5. View All Expenses", "6. View All Incomes", "7. Calculate Net Income", "0. Exit" };
+
+        Scanner kb = new Scanner(System.in);
 
         /// Notice that the userDao reference is an Interface type.
         /// This allows for the use of different concrete implementations.
@@ -51,108 +60,47 @@ public class AppMain {
         /// only references of the interface type to access the DAO methods.
 
         try {
-            System.out.println("\nCall findAllExpenses()");
-            List<Expense> ExpensesList = IExpenseDao.findAllExpenses(); // call a method in the DAO
-
-            if (ExpensesList.isEmpty())
-                System.out.println("There are no Expenses");
-            else {
-                for (Expense expense : ExpensesList) {
-                    System.out.println(expense);
+            do {
+                for (String choice : choices) {
+                    System.out.println(choice);
                 }
-            }
+                input = kb.nextInt();
 
-            // System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
-            // List<Double> Expenses = IExpenseDao.findAllExpensesAndCalcutateSpend(); //
-            // call a method in the DAO
+                switch (input) {
+                    case 1:
+                        IExpenseDao.addExpense();
+                        break;
+                    case 2:
+                        IIncomeDao.addIncome();
+                        break;
+                    case 3:
+                        IExpenseDao.deleteExpense();
+                        break;
+                    case 4:
+                        IIncomeDao.deleteIncome();
+                        break;
+                    case 5:
+                        ExpensesList = IExpenseDao.findAllExpenses();
+                        for (Expense expense : ExpensesList) {
+                            System.out.println(expense);
+                        }
+                        break;
+                    case 6:
+                        IncomesList = (IIncomeDao.findAllIncomes());
+                        for (Income income : IncomesList) {
+                            System.out.println(income);
+                        }
+                        break;
+                    case 7:
+                        MonthlyNetIncome month = new MonthlyNetIncome(IExpenseDao, IIncomeDao);
+                        double netIncome = month.calculateNetIncome();
+                        System.out.println("\nNet income for the month: " + netIncome + "\n");
+                        break;
+                    case 0:
+                        break;
+                }
+            } while (input != 0);
 
-            // if (Expenses.isEmpty())
-            // System.out.println("There are no Expenses");
-            // else {
-            // for (int i = 0; i < Expenses.size(); i++) {
-            // if (i == Expenses.size() - 1) {
-            // System.out.println("Total Spend: " + Expenses.get(i));
-            // } else {
-            // System.out.println("Expense " + (i + 1) + ": " + Expenses.get(i));
-            // }
-
-            // }
-            // }
-
-            // System.out.println("\nCall deleteExpense()");
-            // IExpenseDao.deleteExpense(); // call a method in the DAO
-
-            // System.out.println("\nCall addExpense()");
-            // IExpenseDao.addExpense(); // call a method in the DAO
-
-            // System.out.println("\nCall findAllExAndCalcutateSpend()");
-            // List<Income> IncomesList = IIncomeDao.findAllIncomes(); // call a method in
-            // the DAO
-
-            // if (IncomesList.isEmpty())
-            // System.out.println("There are no Expenses");
-            // else {
-            // for (Income income : IncomesList) {
-            // System.out.println(income);
-            // }
-            // }
-
-            // System.out.println("\nCall findAllExpensesAndCalcutateSpend()");
-            // List<Double> Incomes = IIncomeDao.findAllIncomesAndCalcutateGain(); // call a
-            // method in the DAO
-
-            // if (Incomes.isEmpty())
-            // System.out.println("There are no Incomes");
-            // else {
-            // for (int i = 0; i < Incomes.size(); i++) {
-            // if (i == Incomes.size() - 1) {
-            // System.out.println("Total Spend: " + Incomes.get(i));
-            // } else {
-            // System.out.println("Expense " + (i + 1) + ": " + Incomes.get(i));
-            // }
-
-            // }
-            // }
-
-            // System.out.println("\nCall deleteIncome()");
-            // IIncomeDao.deleteIncome(); // call a method in the DAO
-
-            // System.out.println("\nCall addIncome()");
-            // IIncomeDao.addIncome(); // call a method in the DAO
-
-            MonthlyNetIncome month = new MonthlyNetIncome(IExpenseDao, IIncomeDao);
-
-            System.out.println("\nCall calculateNetIncome()");
-
-            double netIncome = month.calculateNetIncome();
-
-            System.out.println("\nNet income for the month: " + netIncome);
-
-            // test dao with a username and password that we know are present in the
-            // database
-            // (Use phpMyAdmin to check that the database has a row with this data)
-            // System.out.println("\nCall: findUserByUsernamePassword()");
-            // String username = "smithj";
-            // String password = "password";
-
-            // User user = IExpenseDao.findUserByUsernamePassword(username, password);
-
-            // if (user != null) // null returned if userid and password not valid
-            // System.out.println("User found: " + user);
-            // else
-            // System.out.println("Username with that password not found");
-
-            // // test dao - with an invalid username (i.e. row not in database)
-            // username = "madmax";
-            // password = "thunderdome";
-
-            // user = IUserDao.findUserByUsernamePassword(username, password);
-
-            // if (user != null)
-            // System.out.println("Username: " + username + " was found: " + user);
-            // else
-            // System.out.println("Username: " + username + ", password: " + password + " :
-            // NO match found");
         } catch (DaoException e) {
             /// This code is executed when the DAO layer throws an exception.
             /// We might place some logic here to deal with the issue, but in this case,
